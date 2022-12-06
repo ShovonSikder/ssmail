@@ -1,5 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:ssmail/pages/launcher_page.dart';
 import 'package:ssmail/pages/sign_in_page.dart';
 import 'package:ssmail/pages/sign_up_page.dart';
@@ -18,10 +19,12 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: true,
       title: 'Flutter Demo',
       theme: ThemeData(
         primarySwatch: Colors.green,
       ),
+      builder: EasyLoading.init(),
       routes: {
         LauncherPage.routeName: (context) => const LauncherPage(),
         ViewEmailPage.routeName: (context) => const ViewEmailPage(),
