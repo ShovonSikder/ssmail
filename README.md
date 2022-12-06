@@ -1,6 +1,6 @@
 # ssmail
 
-A new Flutter project.
+An email platform where user can send and receive email by signing in.
 
 ## Getting Started
 
