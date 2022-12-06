@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "187949810629",
+    "project_id": "ssmail",
+    "storage_bucket": "ssmail.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:187949810629:android:bc938d64a4b24f354cc1ac",
+        "android_client_info": {
+          "package_name": "com.example.ssmail"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "187949810629-5pbtvnhka6ti7gqurfb4buf44a19bsgo.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDNVFaEZgHBUEdKNOGF6My9mLFjGtlIyV0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "187949810629-5pbtvnhka6ti7gqurfb4buf44a19bsgo.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
