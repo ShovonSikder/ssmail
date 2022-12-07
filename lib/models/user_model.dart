@@ -9,6 +9,7 @@ const String userFieldUserEmail = 'userEmail';
 
 //user model class
 class UserModel {
+  //properties
   String userFirstName;
   String userLastName;
   String userEmail;

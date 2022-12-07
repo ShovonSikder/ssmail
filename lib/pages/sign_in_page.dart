@@ -2,6 +2,8 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:ssmail/auth/auth_service.dart';
+import 'package:ssmail/pages/launcher_page.dart';
 import 'package:ssmail/pages/sign_up_page.dart';
 
 class SignInPage extends StatefulWidget {
@@ -19,12 +21,11 @@ class _SignInPageState extends State<SignInPage> {
 
   String errMsg = '';
 
+  bool obscure = true;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // appBar: AppBar(
-      //   title: const Text('SignIn'),
-      // ),
       body: Center(
         child: Form(
           key: _formKey,
@@ -56,6 +57,7 @@ class _SignInPageState extends State<SignInPage> {
               TextFormField(
                 controller: _emailController,
                 decoration: const InputDecoration(
+                  prefixIcon: Icon(Icons.email_outlined),
                   labelText: 'Enter Your Email',
                   border: OutlineInputBorder(),
                 ),
@@ -63,6 +65,7 @@ class _SignInPageState extends State<SignInPage> {
                   if (value == null || value.isEmpty) {
                     return 'Email is required';
                   }
+                  return null;
                 },
               ),
 
@@ -73,15 +76,29 @@ class _SignInPageState extends State<SignInPage> {
               //password input
               TextFormField(
                 controller: _passwordController,
-                obscureText: true,
-                decoration: const InputDecoration(
+                obscureText: obscure,
+                decoration: InputDecoration(
+                  prefixIcon: const Icon(Icons.lock_outline),
+                  suffixIcon: IconButton(
+                    onPressed: () {
+                      setState(() {
+                        obscure = !obscure;
+                      });
+                    },
+                    icon: Icon(
+                      obscure
+                          ? Icons.visibility_off_outlined
+                          : Icons.visibility_outlined,
+                    ),
+                  ),
                   labelText: 'Enter Your Password',
-                  border: OutlineInputBorder(),
+                  border: const OutlineInputBorder(),
                 ),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'Password is required';
                   }
+                  return null;
                 },
               ),
 
@@ -102,7 +119,8 @@ class _SignInPageState extends State<SignInPage> {
                   const Text('Don\'t have an email yet?'),
                   TextButton(
                     onPressed: () {
-                      Navigator.pushNamed(context, SignUpPage.routeName);
+                      Navigator.pushReplacementNamed(
+                          context, SignUpPage.routeName);
                     },
                     child: const Text(
                       'Sign Up',
@@ -135,10 +153,24 @@ class _SignInPageState extends State<SignInPage> {
     super.dispose();
   }
 
+  //method for sign in
   void _signInToApp() {
     if (_formKey.currentState!.validate()) {
       FocusManager.instance.primaryFocus?.unfocus();
-      // EasyLoading.show();
+      EasyLoading.show(status: 'Verifying...');
+
+      final email = _emailController.text;
+      final password = _passwordController.text;
+
+      AuthService.signIn(email, password).then((value) {
+        EasyLoading.dismiss();
+        Navigator.pushReplacementNamed(context, LauncherPage.routeName);
+      }).catchError((err) {
+        EasyLoading.dismiss();
+        setState(() {
+          errMsg = err.toString();
+        });
+      });
     }
   }
 }

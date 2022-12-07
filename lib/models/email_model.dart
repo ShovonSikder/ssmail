@@ -9,6 +9,7 @@ const String emailFieldCategory = 'category';
 
 //email model class
 class EmailModel {
+  //properties
   UserModel emailFrom;
   String emailSendingTime;
   String emailSubject;
