@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:ssmail/models/user_model.dart';
 
 //fields name in database. Map's key also
@@ -6,23 +7,26 @@ const String emailFieldEmailSendingTime = 'sendingTime';
 const String emailFieldEmailSubject = 'emailSubject';
 const String emailFieldEmailBody = 'emailBody';
 const String emailFieldCategory = 'category';
+const String emailFieldReadStatus = 'readStatus';
 
 //email model class
 class EmailModel {
   //properties
   UserModel emailFrom;
-  String emailSendingTime;
-  String emailSubject;
-  String emailBody;
+  Timestamp emailSendingTime;
+  String? emailSubject; //subject can be null
+  String? emailBody; //body can be null
   String category;
+  bool readStatus;
 
   //constructor to create new email object
   EmailModel({
     required this.emailFrom,
     required this.emailSendingTime,
-    required this.emailSubject,
-    required this.emailBody,
+    this.emailSubject,
+    this.emailBody,
     required this.category,
+    this.readStatus = false,
   });
 
   //method to convert an object to a map.
@@ -33,6 +37,7 @@ class EmailModel {
         emailFieldEmailSubject: emailSubject,
         emailFieldEmailBody: emailBody,
         emailFieldCategory: category,
+        emailFieldReadStatus: readStatus,
       };
 
   //factory method to convert a map to an object.
@@ -44,5 +49,6 @@ class EmailModel {
         emailSubject: map[emailFieldEmailSubject],
         emailBody: map[emailFieldEmailBody],
         category: map[emailFieldCategory],
+        readStatus: map[emailFieldReadStatus],
       );
 }

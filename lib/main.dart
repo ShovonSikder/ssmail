@@ -2,6 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:provider/provider.dart';
+import 'package:ssmail/pages/compose_email_page.dart';
 import 'package:ssmail/pages/launcher_page.dart';
 import 'package:ssmail/pages/sign_in_page.dart';
 import 'package:ssmail/pages/sign_up_page.dart';
@@ -41,6 +42,7 @@ class MyApp extends StatelessWidget {
         ViewEmailPage.routeName: (context) => const ViewEmailPage(),
         SignInPage.routeName: (context) => const SignInPage(),
         SignUpPage.routeName: (context) => const SignUpPage(),
+        ComposeEmailPage.routeName: (context) => const ComposeEmailPage(),
       },
     );
   }
