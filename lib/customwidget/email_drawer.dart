@@ -9,7 +9,9 @@ import 'package:ssmail/utils/constants.dart';
 import 'package:ssmail/utils/helper_functions.dart';
 
 class EmailDrawer extends StatefulWidget {
-  const EmailDrawer({Key? key}) : super(key: key);
+  final Function(String, String) emailBoxController;
+  const EmailDrawer({Key? key, required this.emailBoxController})
+      : super(key: key);
 
   @override
   State<EmailDrawer> createState() => _EmailDrawerState();
@@ -24,33 +26,53 @@ class _EmailDrawerState extends State<EmailDrawer> {
         child: ListView(
           children: [
             buildHeaderContainer(userProvider),
-            SizedBox(
+            const SizedBox(
               height: 20,
             ),
             buildDrawerButton(
-              Icons.contact_mail,
+              Icons.attach_email_rounded,
               EmailCategories.primary,
-              () {},
+              () {
+                widget.emailBoxController(
+                    EmailBox.inbox, EmailCategories.primary);
+                Navigator.pop(context);
+              },
             ),
             buildDrawerButton(
-              Icons.contact_mail,
+              Icons.discount_rounded,
               EmailCategories.promotional,
-              () {},
+              () {
+                widget.emailBoxController(
+                    EmailBox.inbox, EmailCategories.promotional);
+                Navigator.pop(context);
+              },
             ),
             buildDrawerButton(
-              Icons.contact_mail,
+              Icons.group_rounded,
               EmailCategories.social,
-              () {},
+              () {
+                widget.emailBoxController(
+                    EmailBox.inbox, EmailCategories.social);
+                Navigator.pop(context);
+              },
             ),
             buildDrawerButton(
-              Icons.contact_mail,
+              Icons.forum_rounded,
               EmailCategories.forum,
-              () {},
+              () {
+                widget.emailBoxController(
+                    EmailBox.inbox, EmailCategories.forum);
+                Navigator.pop(context);
+              },
             ),
             buildDrawerButton(
               Icons.send_sharp,
-              'Send',
-              () {},
+              'Sent',
+              () {
+                widget.emailBoxController(
+                    EmailBox.sentBox, EmailCategories.noCategory);
+                Navigator.pop(context);
+              },
             ),
             buildSignOutButton(),
           ],

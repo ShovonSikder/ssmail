@@ -26,12 +26,15 @@ class DbHelper {
 
   static Future<void> sendEmailTo(String toEmail, EmailModel emailModel) async {
     final wb = _db.batch();
+    final newDocInbox = _db
+        .collection(collectionUser)
+        .doc(toEmail)
+        .collection(collectionUserInbox)
+        .doc();
+
+    emailModel.emailId = newDocInbox.id;
     wb.set(
-      _db
-          .collection(collectionUser)
-          .doc(toEmail)
-          .collection(collectionUserInbox)
-          .doc(),
+      newDocInbox,
       emailModel.toMap(),
     );
 
@@ -40,10 +43,35 @@ class DbHelper {
           .collection(collectionUser)
           .doc(emailModel.emailFrom.userEmail)
           .collection(collectionUserSentBox)
-          .doc(),
+          .doc(emailModel.emailId),
       emailModel.toMap(),
     );
 
     return wb.commit();
   }
+
+  static Stream<QuerySnapshot<Map<String, dynamic>>> getAllInboxMailsByEmail(
+          String email) =>
+      _db
+          .collection(collectionUser)
+          .doc(email)
+          .collection(collectionUserInbox)
+          .snapshots();
+
+  static Stream<QuerySnapshot<Map<String, dynamic>>> getAllSentBoxMailsByEmail(
+          String email) =>
+      _db
+          .collection(collectionUser)
+          .doc(email)
+          .collection(collectionUserSentBox)
+          .snapshots();
+
+  static Future<void> updateEmailField(
+          String userEmail, String emailId, Map<String, dynamic> data) =>
+      _db
+          .collection(collectionUser)
+          .doc(userEmail)
+          .collection(collectionUserInbox)
+          .doc(emailId)
+          .update(data);
 }

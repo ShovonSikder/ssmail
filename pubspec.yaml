@@ -41,6 +41,7 @@ dependencies:
   cloud_firestore:
   provider:
   flutter_easyloading:
+  intl:
 
 dev_dependencies:
   flutter_test:

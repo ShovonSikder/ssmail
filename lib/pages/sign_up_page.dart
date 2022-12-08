@@ -38,6 +38,7 @@ class _SignUpPageState extends State<SignUpPage> {
 
   @override
   Widget build(BuildContext context) {
+    print('build sign up');
     return Scaffold(
       body: Center(
         child: Form(

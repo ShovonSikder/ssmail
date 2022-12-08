@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:ssmail/customwidget/email_drawer.dart';
+import 'package:ssmail/customwidget/email_list_tile.dart';
+import 'package:ssmail/customwidget/text_profile_placeholder.dart';
 import 'package:ssmail/pages/compose_email_page.dart';
 import 'package:ssmail/providers/user_provider.dart';
 import 'package:ssmail/utils/constants.dart';
+import 'package:ssmail/utils/helper_functions.dart';
 
 class ViewEmailPage extends StatefulWidget {
   static const String routeName = '/view_email';
+
   const ViewEmailPage({Key? key}) : super(key: key);
 
   @override
@@ -15,17 +19,23 @@ class ViewEmailPage extends StatefulWidget {
 
 class _ViewEmailPageState extends State<ViewEmailPage> {
   String showingCategory = EmailCategories.primary;
-  String appBarTitle = 'Inbox';
+  String appBarTitle = EmailBox.inbox;
+
+  // late UserProvider userProvider;
 
   @override
   void didChangeDependencies() {
-    Provider.of<UserProvider>(context).getUserInfoByEmail();
+    // userProvider = Provider.of<UserProvider>(context, listen: false);
+
+    _fetchAllEmails();
 
     super.didChangeDependencies();
   }
 
   @override
   Widget build(BuildContext context) {
+    print('build view email');
+
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
@@ -36,22 +46,64 @@ class _ViewEmailPageState extends State<ViewEmailPage> {
             Text(
               appBarTitle,
             ),
-            Text(
-              showingCategory,
-              style: const TextStyle(
-                color: Colors.black54,
-                fontSize: 10,
-                fontStyle: FontStyle.italic,
+            if (showingCategory != EmailCategories.noCategory)
+              Text(
+                showingCategory,
+                style: const TextStyle(
+                  color: Colors.black54,
+                  fontSize: 10,
+                  fontStyle: FontStyle.italic,
+                ),
               ),
-            ),
           ],
         ),
       ),
-      body: ListView(
-        padding: const EdgeInsets.all(8),
-        children: [],
+      body: Consumer<UserProvider>(
+        builder: (context, provider, child) {
+          bool showEmptyMsg;
+          appBarTitle == EmailBox.inbox
+              ? showEmptyMsg = provider.inbox.isEmpty
+              : showEmptyMsg = provider.sentBox.isEmpty;
+
+          return showEmptyMsg
+              ? Center(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(
+                        appBarTitle == EmailBox.sentBox
+                            ? Icons.outbox_outlined
+                            : Icons.move_to_inbox_outlined,
+                        size: 80,
+                        color: Colors.grey,
+                      ),
+                      Text(
+                        appBarTitle == EmailBox.sentBox
+                            ? 'This sent box is empty'
+                            : 'This inbox is empty',
+                        style: const TextStyle(
+                            fontStyle: FontStyle.italic, color: Colors.grey),
+                      ),
+                      const SizedBox(
+                        width: 150,
+                        child: LinearProgressIndicator(),
+                      ),
+                    ],
+                  ),
+                )
+              : ListView(
+                  padding: const EdgeInsets.all(8),
+                  children: _getEmailListToDisplay(provider),
+                );
+        },
       ),
-      drawer: const EmailDrawer(),
+      drawer: EmailDrawer(emailBoxController: (emailBox, category) {
+        //call back for filtering  email box and categories emails
+        setState(() {
+          appBarTitle = emailBox;
+          showingCategory = category;
+        });
+      }),
       floatingActionButton: buildEmailComposeButton(),
     );
   }
@@ -90,5 +142,34 @@ class _ViewEmailPageState extends State<ViewEmailPage> {
         ),
       ),
     );
+  }
+
+  _getEmailListToDisplay(UserProvider userProvider) {
+    if (appBarTitle == EmailBox.inbox) {
+      return userProvider.inbox
+          .map(
+            (email) => EmailListTile(email: email),
+          )
+          .toList();
+    } else if (appBarTitle == EmailBox.sentBox) {
+      return userProvider.sentBox
+          .map(
+            (email) => EmailListTile(
+              email: email,
+              emailBox: EmailBox.sentBox,
+            ),
+          )
+          .toList();
+    }
+  }
+
+  void _fetchAllEmails() async {
+    //fetch data from email
+    await Provider.of<UserProvider>(context, listen: false)
+        .getUserInfoByEmail();
+    await Provider.of<UserProvider>(context, listen: false)
+        .getAllInboxMailsByEmail();
+    await Provider.of<UserProvider>(context, listen: false)
+        .getAllSentBoxMailsByEmail();
   }
 }

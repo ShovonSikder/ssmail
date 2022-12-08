@@ -8,8 +8,8 @@ class TextProfilePlaceholder extends StatelessWidget {
   const TextProfilePlaceholder({
     Key? key,
     required this.text,
-    this.height = 65,
-    this.width = 65,
+    this.height = 57,
+    this.width = 57,
     this.bgColor = Colors.white,
   }) : super(key: key);
 

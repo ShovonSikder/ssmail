@@ -8,6 +8,40 @@ import 'package:ssmail/models/user_model.dart';
 
 class UserProvider extends ChangeNotifier {
   UserModel? userModel;
+  List<EmailModel> inbox = [];
+  List<EmailModel> sentBox = [];
+
+  getAllInboxMailsByEmail() {
+    DbHelper.getAllInboxMailsByEmail(AuthService.currentUser!.email!)
+        .listen((snapshot) {
+      inbox = List.generate(
+        snapshot.docs.length,
+        (index) => EmailModel.fromMap(
+          snapshot.docs[index].data(),
+        ),
+      );
+      inbox.sort(
+        (e1, e2) => e2.emailSendingTime.compareTo(e1.emailSendingTime),
+      );
+      notifyListeners();
+    });
+  }
+
+  getAllSentBoxMailsByEmail() {
+    DbHelper.getAllSentBoxMailsByEmail(AuthService.currentUser!.email!)
+        .listen((snapshot) {
+      sentBox = List.generate(
+        snapshot.docs.length,
+        (index) => EmailModel.fromMap(
+          snapshot.docs[index].data(),
+        ),
+      );
+      sentBox.sort(
+        (e1, e2) => e2.emailSendingTime.compareTo(e1.emailSendingTime),
+      );
+      notifyListeners();
+    });
+  }
 
   getUserInfoByEmail() {
     DbHelper.getUserInfoByEmail(AuthService.currentUser!.email!)
@@ -28,4 +62,9 @@ class UserProvider extends ChangeNotifier {
 
   Future<void> sendEmailTo(String toEmail, EmailModel emailModel) =>
       DbHelper.sendEmailTo(toEmail, emailModel);
+
+  Future<void> updateEmailField(
+          String emailId, String field, dynamic value) async =>
+      await DbHelper.updateEmailField(
+          AuthService.currentUser!.email!, emailId, {field: value});
 }

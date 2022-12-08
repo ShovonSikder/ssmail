@@ -33,6 +33,7 @@ class _ComposeEmailPageState extends State<ComposeEmailPage> {
 
   @override
   Widget build(BuildContext context) {
+    print('build compose email');
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.transparent,
@@ -83,7 +84,7 @@ class _ComposeEmailPageState extends State<ComposeEmailPage> {
             ),
           ),
 
-          SizedBox(
+          const SizedBox(
             height: 15,
           ),
           //email body field
@@ -94,12 +95,6 @@ class _ComposeEmailPageState extends State<ComposeEmailPage> {
               hintText: 'Compose email',
               border: InputBorder.none,
             ),
-            onChanged: (value) {
-              if (value == ' ') {
-                print('new line');
-              }
-              print(value);
-            },
           ),
         ],
       ),
@@ -118,6 +113,8 @@ class _ComposeEmailPageState extends State<ComposeEmailPage> {
   }
 
   void _sendEmail() async {
+    FocusManager.instance.primaryFocus?.unfocus();
+
     EasyLoading.show(status: 'Sending...');
     final toEmail = _toEmailController.text;
     final subject = _emailSubjectController.text;
@@ -125,11 +122,12 @@ class _ComposeEmailPageState extends State<ComposeEmailPage> {
 
     if (toEmail.isEmpty) {
       EasyLoading.dismiss();
-      showMsg(context, 'Enter the email address to want email to');
+      showMsg(context, 'Enter the email address you want email to');
       return;
     } else if (await userProvider.doesUserExist(toEmail)) {
       final emailModel = EmailModel(
         emailFrom: userProvider.userModel!,
+        emailTo: toEmail,
         emailSendingTime: Timestamp.fromDate(DateTime.now()),
         emailSubject: subject,
         emailBody: emailBody,
