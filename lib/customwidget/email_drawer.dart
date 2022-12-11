@@ -83,7 +83,7 @@ class _EmailDrawerState extends State<EmailDrawer> {
                     Navigator.pop(context);
                   },
                 ),
-                buildSignOutButton(),
+                buildSignOutButton(provider),
               ],
             );
           },
@@ -92,11 +92,13 @@ class _EmailDrawerState extends State<EmailDrawer> {
     );
   }
 
-  Padding buildSignOutButton() {
+  Padding buildSignOutButton(UserProvider provider) {
     return Padding(
       padding: const EdgeInsets.all(10),
       child: TextButton(
-        onPressed: _signOut,
+        onPressed: () {
+          _signOut(provider);
+        },
         child: Row(
           children: const [
             Icon(
@@ -203,9 +205,9 @@ class _EmailDrawerState extends State<EmailDrawer> {
   }
 
   //method to signing out from the app
-  void _signOut() {
+  void _signOut(UserProvider provider) {
     EasyLoading.show(status: 'Signing out...');
-    AuthService.signOut().then((value) {
+    provider.signOut().then((value) {
       EasyLoading.dismiss();
       Navigator.pushReplacementNamed(context, LauncherPage.routeName);
     }).catchError((err) {

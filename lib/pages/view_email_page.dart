@@ -182,11 +182,13 @@ class _ViewEmailPageState extends State<ViewEmailPage> {
     }
   }
 
-  void _fetchAllEmails() {
+  void _fetchAllEmails() async {
     //fetch data from email
-    Provider.of<UserProvider>(context, listen: false).getUserInfoByEmail();
-    Provider.of<UserProvider>(context, listen: false).getAllInboxMailsByEmail();
-    Provider.of<UserProvider>(context, listen: false)
+    await Provider.of<UserProvider>(context, listen: false)
+        .getUserInfoByEmail();
+    await Provider.of<UserProvider>(context, listen: false)
+        .getAllInboxMailsByEmail();
+    await Provider.of<UserProvider>(context, listen: false)
         .getAllSentBoxMailsByEmail();
   }
 }

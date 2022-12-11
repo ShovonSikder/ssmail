@@ -11,10 +11,13 @@ class UserProvider extends ChangeNotifier {
   UserModel? userModel;
   List<EmailModel> inbox = [];
   List<EmailModel> sentBox = [];
+  var inboxListener;
+  var sendBoxListener;
 
   getAllInboxMailsByEmail() {
-    DbHelper.getAllInboxMailsByEmail(AuthService.currentUser!.email!)
-        .listen((snapshot) {
+    inboxListener =
+        DbHelper.getAllInboxMailsByEmail(AuthService.currentUser!.email!)
+            .listen((snapshot) {
       inbox = List.generate(
         snapshot.docs.length,
         (index) => EmailModel.fromMap(
@@ -29,8 +32,9 @@ class UserProvider extends ChangeNotifier {
   }
 
   getAllSentBoxMailsByEmail() {
-    DbHelper.getAllSentBoxMailsByEmail(AuthService.currentUser!.email!)
-        .listen((snapshot) {
+    sendBoxListener =
+        DbHelper.getAllSentBoxMailsByEmail(AuthService.currentUser!.email!)
+            .listen((snapshot) {
       sentBox = List.generate(
         snapshot.docs.length,
         (index) => EmailModel.fromMap(
@@ -83,4 +87,9 @@ class UserProvider extends ChangeNotifier {
           String emailId, String field, dynamic value) async =>
       await DbHelper.updateEmailField(
           AuthService.currentUser!.email!, emailId, {field: value});
+  Future<void> signOut() async {
+    inboxListener.cancel();
+    sendBoxListener.cancel();
+    AuthService.signOut();
+  }
 }
