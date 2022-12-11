@@ -2,11 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:ssmail/customwidget/email_drawer.dart';
 import 'package:ssmail/customwidget/email_list_tile.dart';
-import 'package:ssmail/customwidget/text_profile_placeholder.dart';
 import 'package:ssmail/pages/compose_email_page.dart';
 import 'package:ssmail/providers/user_provider.dart';
 import 'package:ssmail/utils/constants.dart';
-import 'package:ssmail/utils/helper_functions.dart';
 
 class ViewEmailPage extends StatefulWidget {
   static const String routeName = '/view_email';
@@ -34,8 +32,6 @@ class _ViewEmailPageState extends State<ViewEmailPage> {
 
   @override
   Widget build(BuildContext context) {
-    print('build view email');
-
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
@@ -65,6 +61,8 @@ class _ViewEmailPageState extends State<ViewEmailPage> {
               ? showEmptyMsg = provider.inbox.isEmpty
               : showEmptyMsg = provider.sentBox.isEmpty;
 
+          final List<Widget> emailsToDisplay = _getEmailListToDisplay(provider);
+
           return showEmptyMsg
               ? Center(
                   child: Column(
@@ -91,10 +89,30 @@ class _ViewEmailPageState extends State<ViewEmailPage> {
                     ],
                   ),
                 )
-              : ListView(
-                  padding: const EdgeInsets.all(8),
-                  children: _getEmailListToDisplay(provider),
-                );
+              : emailsToDisplay.isNotEmpty
+                  ? ListView(
+                      padding: const EdgeInsets.all(8),
+                      children: emailsToDisplay,
+                    )
+                  //in case email list empty after filtering by category
+                  : Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          const Icon(
+                            Icons.folder_copy_rounded,
+                            size: 70,
+                            color: Colors.grey,
+                          ),
+                          Text(
+                            'No emails in $showingCategory category',
+                            style: const TextStyle(
+                                color: Colors.grey,
+                                fontStyle: FontStyle.italic),
+                          ),
+                        ],
+                      ),
+                    );
         },
       ),
       drawer: EmailDrawer(emailBoxController: (emailBox, category) {
@@ -147,6 +165,7 @@ class _ViewEmailPageState extends State<ViewEmailPage> {
   _getEmailListToDisplay(UserProvider userProvider) {
     if (appBarTitle == EmailBox.inbox) {
       return userProvider.inbox
+          .where((email) => email.category == showingCategory) //filtering
           .map(
             (email) => EmailListTile(email: email),
           )
@@ -163,13 +182,11 @@ class _ViewEmailPageState extends State<ViewEmailPage> {
     }
   }
 
-  void _fetchAllEmails() async {
+  void _fetchAllEmails() {
     //fetch data from email
-    await Provider.of<UserProvider>(context, listen: false)
-        .getUserInfoByEmail();
-    await Provider.of<UserProvider>(context, listen: false)
-        .getAllInboxMailsByEmail();
-    await Provider.of<UserProvider>(context, listen: false)
+    Provider.of<UserProvider>(context, listen: false).getUserInfoByEmail();
+    Provider.of<UserProvider>(context, listen: false).getAllInboxMailsByEmail();
+    Provider.of<UserProvider>(context, listen: false)
         .getAllSentBoxMailsByEmail();
   }
 }

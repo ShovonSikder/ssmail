@@ -4,7 +4,6 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:provider/provider.dart';
 import 'package:ssmail/models/email_model.dart';
 import 'package:ssmail/providers/user_provider.dart';
-import 'package:ssmail/utils/constants.dart';
 import 'package:ssmail/utils/helper_functions.dart';
 
 class ComposeEmailPage extends StatefulWidget {
@@ -33,7 +32,6 @@ class _ComposeEmailPageState extends State<ComposeEmailPage> {
 
   @override
   Widget build(BuildContext context) {
-    print('build compose email');
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.transparent,
@@ -131,8 +129,10 @@ class _ComposeEmailPageState extends State<ComposeEmailPage> {
         emailSendingTime: Timestamp.fromDate(DateTime.now()),
         emailSubject: subject,
         emailBody: emailBody,
-        category: EmailCategories.primary,
       );
+
+      //assigning category to email
+      emailModel.assignCategory();
 
       //send an email to given address
       userProvider.sendEmailTo(toEmail, emailModel).then((value) {

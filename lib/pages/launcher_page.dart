@@ -14,7 +14,6 @@ class LauncherPage extends StatefulWidget {
 class _LauncherPageState extends State<LauncherPage> {
   @override
   Widget build(BuildContext context) {
-    print('build launcher');
     Future.delayed(
       Duration.zero,
       () {

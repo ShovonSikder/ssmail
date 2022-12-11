@@ -25,7 +25,6 @@ class _SignInPageState extends State<SignInPage> {
 
   @override
   Widget build(BuildContext context) {
-    print('build sign in');
     return Scaffold(
       body: Center(
         child: Form(

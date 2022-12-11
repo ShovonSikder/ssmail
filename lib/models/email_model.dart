@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:ssmail/models/user_model.dart';
+import 'package:ssmail/utils/constants.dart';
 
 //fields name in database. Map's key also
 const String emailFieldEmailId = 'emailId';
@@ -31,9 +32,25 @@ class EmailModel {
     required this.emailSendingTime,
     this.emailSubject,
     this.emailBody,
-    required this.category,
+    this.category = EmailCategories.primary,
     this.readStatus = false,
   });
+
+  //method to automatically assign category to a email based on some general condition
+  //email categorisation can be make more effective using ML model
+  //by default the email will be in primary category
+  void assignCategory() {
+    //this are some static condition for email categorize
+    //based on sender email address
+    //the condition may improve even better to use ML model
+    if (emailFrom.userEmail.contains('no-reply')) {
+      category = EmailCategories.promotional;
+    } else if (emailFrom.userEmail.contains('notification')) {
+      category = EmailCategories.social;
+    } else if (emailFrom.userEmail.contains('group')) {
+      category = EmailCategories.forum;
+    }
+  }
 
   //method to convert an object to a map.
   //Cause we have to pass data to database as map.

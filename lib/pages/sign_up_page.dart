@@ -5,7 +5,6 @@ import 'package:ssmail/auth/auth_service.dart';
 import 'package:ssmail/models/user_model.dart';
 import 'package:ssmail/pages/sign_in_page.dart';
 import 'package:ssmail/providers/user_provider.dart';
-import 'package:ssmail/utils/helper_functions.dart';
 
 import 'launcher_page.dart';
 
@@ -38,7 +37,6 @@ class _SignUpPageState extends State<SignUpPage> {
 
   @override
   Widget build(BuildContext context) {
-    print('build sign up');
     return Scaffold(
       body: Center(
         child: Form(

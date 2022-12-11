@@ -33,8 +33,6 @@ class _EmailReadPageState extends State<EmailReadPage> {
 
   @override
   Widget build(BuildContext context) {
-    print('build email read page');
-
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.transparent,
@@ -112,7 +110,7 @@ class _EmailReadPageState extends State<EmailReadPage> {
       title: Text(
         inboxMail
             ? '${emailModel.emailFrom.userFirstName} ${emailModel.emailFrom.userLastName}'
-            : emailModel.emailTo.split('@')[0],
+            : 'to: ${emailModel.emailTo.split('@')[0]}',
         style: const TextStyle(
           fontWeight: FontWeight.bold,
         ),

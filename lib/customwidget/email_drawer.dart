@@ -23,59 +23,70 @@ class _EmailDrawerState extends State<EmailDrawer> {
     final userProvider = Provider.of<UserProvider>(context, listen: false);
     return Drawer(
       child: SafeArea(
-        child: ListView(
-          children: [
-            buildHeaderContainer(userProvider),
-            const SizedBox(
-              height: 20,
-            ),
-            buildDrawerButton(
-              Icons.attach_email_rounded,
-              EmailCategories.primary,
-              () {
-                widget.emailBoxController(
-                    EmailBox.inbox, EmailCategories.primary);
-                Navigator.pop(context);
-              },
-            ),
-            buildDrawerButton(
-              Icons.discount_rounded,
-              EmailCategories.promotional,
-              () {
-                widget.emailBoxController(
-                    EmailBox.inbox, EmailCategories.promotional);
-                Navigator.pop(context);
-              },
-            ),
-            buildDrawerButton(
-              Icons.group_rounded,
-              EmailCategories.social,
-              () {
-                widget.emailBoxController(
-                    EmailBox.inbox, EmailCategories.social);
-                Navigator.pop(context);
-              },
-            ),
-            buildDrawerButton(
-              Icons.forum_rounded,
-              EmailCategories.forum,
-              () {
-                widget.emailBoxController(
-                    EmailBox.inbox, EmailCategories.forum);
-                Navigator.pop(context);
-              },
-            ),
-            buildDrawerButton(
-              Icons.send_sharp,
-              'Sent',
-              () {
-                widget.emailBoxController(
-                    EmailBox.sentBox, EmailCategories.noCategory);
-                Navigator.pop(context);
-              },
-            ),
-            buildSignOutButton(),
-          ],
+        child: Consumer<UserProvider>(
+          builder: (context, provider, child) {
+            final Map<String, int> unReadEmailCount =
+                provider.countUnreadEmail();
+            return ListView(
+              children: [
+                buildHeaderContainer(userProvider),
+                const SizedBox(
+                  height: 20,
+                ),
+                buildDrawerButton(
+                  Icons.attach_email_rounded,
+                  EmailCategories.primary,
+                  unReadEmailCount[EmailCategories.primary]!,
+                  () {
+                    widget.emailBoxController(
+                        EmailBox.inbox, EmailCategories.primary);
+                    Navigator.pop(context);
+                  },
+                ),
+                buildDrawerButton(
+                  Icons.discount_rounded,
+                  EmailCategories.promotional,
+                  unReadEmailCount[EmailCategories.promotional]!,
+                  () {
+                    widget.emailBoxController(
+                        EmailBox.inbox, EmailCategories.promotional);
+                    Navigator.pop(context);
+                  },
+                ),
+                buildDrawerButton(
+                  Icons.group_rounded,
+                  EmailCategories.social,
+                  unReadEmailCount[EmailCategories.social]!,
+                  () {
+                    widget.emailBoxController(
+                        EmailBox.inbox, EmailCategories.social);
+                    Navigator.pop(context);
+                  },
+                ),
+                buildDrawerButton(
+                  Icons.forum_rounded,
+                  EmailCategories.forum,
+                  unReadEmailCount[EmailCategories.forum]!,
+                  () {
+                    widget.emailBoxController(
+                        EmailBox.inbox, EmailCategories.forum);
+                    Navigator.pop(context);
+                  },
+                ),
+                buildDrawerButton(
+                  Icons.send_sharp,
+                  'Sent',
+                  0,
+                  () {
+                    widget.emailBoxController(
+                        EmailBox.sentBox, EmailCategories.noCategory);
+                    Navigator.pop(context);
+                  },
+                ),
+                buildSignOutButton(),
+              ],
+            );
+          },
         ),
       ),
     );
@@ -107,7 +118,8 @@ class _EmailDrawerState extends State<EmailDrawer> {
     );
   }
 
-  Padding buildDrawerButton(IconData icon, String text, Function() callback) {
+  Padding buildDrawerButton(
+      IconData icon, String text, int count, Function() callback) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 0),
       child: TextButton(
@@ -118,14 +130,37 @@ class _EmailDrawerState extends State<EmailDrawer> {
               icon,
               color: Colors.grey,
             ),
-            SizedBox(
+            const SizedBox(
               width: 10,
             ),
             Text(
               text,
-              style: TextStyle(color: Colors.black),
+              style: const TextStyle(color: Colors.black),
             ),
+            const Expanded(
+              child: Text(''),
+            ),
+            if (count > 0) buildUnreadEmailCountContainer(count),
           ],
+        ),
+      ),
+    );
+  }
+
+  Container buildUnreadEmailCountContainer(int count) {
+    return Container(
+      alignment: Alignment.center,
+      padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+      decoration: BoxDecoration(
+        color: Colors.amber,
+        borderRadius: BorderRadius.circular(15),
+      ),
+      child: Text(
+        'New ${count < 100 ? count : '99+'}',
+        style: const TextStyle(
+          fontWeight: FontWeight.bold,
+          color: Colors.black,
+          fontSize: 12,
         ),
       ),
     );

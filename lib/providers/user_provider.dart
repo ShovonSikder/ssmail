@@ -5,6 +5,7 @@ import 'package:ssmail/auth/auth_service.dart';
 import 'package:ssmail/db/db_helper.dart';
 import 'package:ssmail/models/email_model.dart';
 import 'package:ssmail/models/user_model.dart';
+import 'package:ssmail/utils/constants.dart';
 
 class UserProvider extends ChangeNotifier {
   UserModel? userModel;
@@ -51,6 +52,21 @@ class UserProvider extends ChangeNotifier {
         notifyListeners();
       }
     });
+  }
+
+  Map<String, int> countUnreadEmail() {
+    Map<String, int> countMap = {
+      EmailCategories.primary: 0,
+      EmailCategories.promotional: 0,
+      EmailCategories.social: 0,
+      EmailCategories.forum: 0,
+    };
+    for (var email in inbox) {
+      if (!email.readStatus) {
+        countMap[email.category] = countMap[email.category]! + 1;
+      }
+    }
+    return countMap;
   }
 
   Future<bool> doesUserExist(String email) async {

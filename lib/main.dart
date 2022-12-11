@@ -32,7 +32,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      debugShowCheckedModeBanner: true,
+      debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
       theme: ThemeData(
         primarySwatch: Colors.green,
@@ -44,7 +44,7 @@ class MyApp extends StatelessWidget {
         SignInPage.routeName: (context) => const SignInPage(),
         SignUpPage.routeName: (context) => const SignUpPage(),
         ComposeEmailPage.routeName: (context) => const ComposeEmailPage(),
-        EmailReadPage.routeName: (context) => EmailReadPage(),
+        EmailReadPage.routeName: (context) => const EmailReadPage(),
       },
     );
   }
