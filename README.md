@@ -5,7 +5,7 @@ An email platform where user can send and receive email by signing in. It's an a
 
 ## Getting Started
 
-To use the ssmail app you need to first install the app in your device. Download & the app from 
+To use the ssmail app you need to first install the app in your device. Download & the app (.apk) from 
 [here](https://github.com/ShovonSikder/ssmail/raw/main/outputs/build/apk/ssmail.apk).
 After completing the download and installation process follow the below steps to run the application.
 
@@ -72,6 +72,8 @@ page, placed on top left corner. You will see a drawer comes out now choose the 
  </p>
 
 If you wish to sign out from the app you will find the option in this menu also.
+
+---**END**---
 
 ## Enjoy Your New Email
 
