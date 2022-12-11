@@ -5,13 +5,13 @@ An email platform where user can send and receive email by signing in. It's an a
 
 ## Getting Started
 
-To use the ssmail app you need to first install the app in your device. Download & the app from [here]("outputs/build/apk/ssmail.apk").
+To use the ssmail app you need to first install the app in your device. Download & the app from [here]("https://github.com/ShovonSikder/ssmail/raw/main/outputs/build/apk/ssmail.apk").
 After completing the download and installation process follow the below steps to run the application.
 
 ### 1. Sign in to the app (Romatoo Exam Q{u689p}: R2)
 The first interface you will show is a sign in page. Provide a valid email and password *(all required)* in the specified input field and click **Sign In** button.
 If the provided data is valid you will see your inbox. Don't panic if you have no valid email address, you can create a new one.
-![Sign in Page](https://github.com/ShovonSikder/ssmail/blob/78f1be7d715d5d6609c38ce8fbef190704a764fa/outputs/screenshots/signinpagess.jpg)
+![Sign in Page](https://github.com/ShovonSikder/ssmail/blob/main/outputs/screenshots/signinpagess.jpg)
 The next steps show the sign up process for new user.
 
 ### 2. Sign up to the app (Romatoo Exam Q{u689p}: R1)
